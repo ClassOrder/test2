@@ -36,16 +36,16 @@
     }
 
     EOSBrowserSupporter.prototype = {
-        build(redirectURL, options) {
+        build: function (redirectURL, options) {
             this.redirectURL = redirectURL;
             const ui = Object.assign(defaultOptions.ui, options.ui);
             this.options = Object.assign(defaultOptions, options);
             this.options.ui = ui;
         },
-        setup() {
+        setup: function () {
             this.setupToEdgeButton();
         },
-        setupToEdgeButton() {
+        setupToEdgeButton: function () {
             if (!this.options.ui.toEdgeButton) return;
             const toEdgeButton = document.querySelector('.button-to-edge');
             toEdgeButton.classList.add('show');
