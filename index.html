@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="shortcut icon" href="/favicon.ico">
+    <script>
+      (function() {
+    const isIE = /MSIE \d|Trident.*rv:/.test(navigator.userAgent);
+    const EDGE_DOWNLOAD_URL = 'https://www.microsoft.com/ko-kr/edge';
+    const getParams = function () {
+        const params = {};
+
+        const query = window.location.search;
+        query.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+            function(_, key, value) {
+                return params[key] = value;
+        });
+
+        return params;
+    }
+
+    const defaultRedirectURL = 'https://nexon.com/';
+    const defaultOptions = {
+        autoRedirectToEdge: true,
+        autoMoveToBridgePage: true,
+        ui: {
+            toEdgeButton: true,
+        }
+    };
+    
+    const EOSBrowserSupporter = function (redirectURL, options) {
+        this.build(redirectURL, options);
+    }
+
+    EOSBrowserSupporter.prototype = {
+        build(redirectURL, options) {
+            this.redirectURL = redirectURL;
+            const ui = Object.assign(defaultOptions.ui, options.ui);
+            this.options = Object.assign(defaultOptions, options);
+            this.options.ui = ui;
+        },
+        setup() {
+            this.setupToEdgeButton();
+        },
+        setupToEdgeButton() {
+            if (!this.options.ui.toEdgeButton) return;
+            const toEdgeButton = document.querySelector('.button-to-edge');
+            toEdgeButton.classList.add('show');
+            toEdgeButton.addEventListener('click', function() {
+              try {
+                if (isIE) {
+                    window.location = 'microsoft-edge:' + this.redirectURL;
+                };
+                setTimeout(function() {
+                    window.open('', '_self', '').close();
+                }, 0);
+              } catch (e) {
+                alert('no edge');
+              }
+                
+            }.bind(this));
+        }
+    }
+
+    const startApp = function() {
+        const urlSearchParams = getParams();
+        const redirectURL = urlSearchParams.redirectURL ? decodeURI(urlSearchParams.redirectURL) : defaultRedirectURL;
+        let options = defaultOptions;
+
+        try {
+            if (urlSearchParams.options) {
+                const encodedOptions = urlSearchParams.options;
+                options = JSON.parse(encodedOptions);
+            }
+        } catch (error) {
+            options = defaultOptions;
+            console.error(error);
+        }
+
+        const eosBrowserSupporter = new EOSBrowserSupporter(redirectURL, options);
+        eosBrowserSupporter.setup();
+    }
+
+    window.addEventListener('DOMContentLoaded', startApp);
+}());
+
+    </script>
+</head>
+<body>
+    <h1>Goodbye IE11</h1>
+    <a href="https://blogs.windows.com/windowsexperience/2021/05/19/the-future-of-internet-explorer-on-windows-10-is-in-microsoft-edge/">
+        Here is some news
+    </a>
+    <button class="button-to-edge">Move to EDGE Browser</button>
+</body>
+</html>
