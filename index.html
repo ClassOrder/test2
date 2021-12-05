@@ -51,6 +51,9 @@
             toEdgeButton.classList.add('show');
             toEdgeButton.addEventListener('click', function() {
               try {
+                  console.log(Navigator.msLaunchUri);
+                  console.log(isIE);
+                  window.location = 'microsoft-edge:' + this.redirectURL;
                 if (isIE) {
                     window.location = 'microsoft-edge:' + this.redirectURL;
                 };
@@ -58,6 +61,7 @@
                     window.open('', '_self', '').close();
                 }, 0);
               } catch (e) {
+                  console.log(e);
                 alert('no edge');
               }
                 
